@@ -1,0 +1,587 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FinTools - EMI Calculator & Financial Tools</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root {
+            --primary: #4361ee;
+            --secondary: #3a0ca3;
+            --accent: #4895ef;
+            --light: #f8f9fa;
+            --dark: #212529;
+            --success: #4cc9f0;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            color: var(--dark);
+            line-height: 1.6;
+            background-color: #f5f7ff;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: white;
+            padding: 1rem 0;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.8rem;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+        }
+        
+        .logo i {
+            margin-right: 10px;
+            color: var(--accent);
+        }
+        
+        /* Hero with EMI Calculator */
+        .hero {
+            padding: 3rem 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--secondary);
+        }
+        
+        .hero p {
+            font-size: 1.1rem;
+            max-width: 700px;
+            margin: 0 auto 2rem;
+            color: #555;
+        }
+        
+        /* Calculator Tabs */
+        .calculator-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .tab-btn {
+            padding: 0.8rem 1.5rem;
+            background: white;
+            border: none;
+            border-radius: 30px;
+            margin: 0 0.5rem 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 3px 10px rgba(0, 0, 0, 0.08);
+            transition: all 0.3s ease;
+        }
+        
+        .tab-btn i {
+            margin-right: 8px;
+            color: var(--primary);
+        }
+        
+        .tab-btn.active {
+            background: var(--primary);
+            color: white;
+        }
+        
+        .tab-btn.active i {
+            color: white;
+        }
+        
+        /* EMI Calculator Widget */
+        .calculator-widget {
+            background: white;
+            border-radius: 10px;
+            padding: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+        }
+        
+        .calculator-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .calculator-icon {
+            background: var(--primary);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            margin-right: 1rem;
+        }
+        
+        .calculator-title h2 {
+            color: var(--secondary);
+            margin-bottom: 0.2rem;
+        }
+        
+        .calculator-title p {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        .calculator-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+        }
+        
+        .input-group {
+            display: flex;
+            align-items: center;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            overflow: hidden;
+        }
+        
+        .input-group span {
+            padding: 0.8rem;
+            background: #f5f5f5;
+            color: #666;
+        }
+        
+        .input-group input, .input-group select {
+            flex: 1;
+            padding: 0.8rem;
+            border: none;
+            outline: none;
+            font-size: 1rem;
+        }
+        
+        .calculate-btn {
+            grid-column: span 2;
+            background: var(--primary);
+            color: white;
+            border: none;
+            padding: 1rem;
+            border-radius: 5px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .calculate-btn:hover {
+            background: var(--secondary);
+        }
+        
+        /* Results */
+        .calculator-results {
+            display: none;
+            margin-top: 2rem;
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            text-align: center;
+        }
+        
+        .result-item {
+            padding: 1rem;
+        }
+        
+        .result-value {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .result-label {
+            color: #666;
+            font-size: 0.9rem;
+        }
+        
+        /* Tools Grid */
+        .tools-section {
+            padding: 4rem 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title h2 {
+            font-size: 2rem;
+            color: var(--secondary);
+            margin-bottom: 1rem;
+        }
+        
+        .section-title p {
+            color: #666;
+            max-width: 700px;
+            margin: 0 auto;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+            gap: 2rem;
+        }
+        
+        .tool-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+            transition: all 0.3s ease;
+            text-align: center;
+            padding: 2rem 1.5rem;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+        }
+        
+        .tool-icon {
+            width: 70px;
+            height: 70px;
+            background: linear-gradient(135deg, var(--primary), var(--accent));
+            color: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1.5rem;
+            font-size: 1.8rem;
+        }
+        
+        .tool-card h3 {
+            margin-bottom: 1rem;
+            color: var(--dark);
+        }
+        
+        .tool-card p {
+            color: #666;
+            margin-bottom: 1.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .tool-link {
+            display: inline-block;
+            color: var(--primary);
+            font-weight: 500;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+        
+        .tool-link:hover {
+            color: var(--secondary);
+        }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .calculator-form {
+                grid-template-columns: 1fr;
+            }
+            
+            .calculate-btn {
+                grid-column: span 1;
+            }
+            
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .hero h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header>
+        <div class="container header-container">
+            <div class="logo">
+                <i class="fas fa-calculator"></i>
+                <span>FinTools</span>
+            </div>
+            <nav>
+                <a href="#" style="color: white; text-decoration: none; font-weight: 500;">All Tools</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- Hero with EMI Calculator -->
+    <section class="hero">
+        <div class="container">
+            <h1>Smart Financial Calculators</h1>
+            <p>Calculate EMIs, plan investments, and make informed financial decisions with our free online tools</p>
+            
+            <div class="calculator-tabs">
+                <button class="tab-btn active">
+                    <i class="fas fa-calculator"></i> EMI Calculator
+                </button>
+                <button class="tab-btn">
+                    <i class="fas fa-home"></i> Home Loan
+                </button>
+                <button class="tab-btn">
+                    <i class="fas fa-car"></i> Car Loan
+                </button>
+                <button class="tab-btn">
+                    <i class="fas fa-credit-card"></i> Personal Loan
+                </button>
+            </div>
+            
+            <div class="calculator-widget">
+                <div class="calculator-header">
+                    <div class="calculator-icon">
+                        <i class="fas fa-calculator"></i>
+                    </div>
+                    <div class="calculator-title">
+                        <h2>EMI Calculator</h2>
+                        <p>Calculate your Equated Monthly Installment</p>
+                    </div>
+                </div>
+                
+                <form id="emiCalculatorForm">
+                    <div class="calculator-form">
+                        <div class="form-group">
+                            <label for="loanAmount">Loan Amount</label>
+                            <div class="input-group">
+                                <span>₹</span>
+                                <input type="number" id="loanAmount" placeholder="50,00,000" required>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="interestRate">Interest Rate</label>
+                            <div class="input-group">
+                                <input type="number" id="interestRate" placeholder="8.5" step="0.1" required>
+                                <span>%</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="loanTenure">Loan Tenure</label>
+                            <div class="input-group">
+                                <input type="number" id="loanTenure" placeholder="5" required>
+                                <span>Years</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="loanType">Loan Type</label>
+                            <div class="input-group">
+                                <select id="loanType">
+                                    <option value="home">Home Loan</option>
+                                    <option value="car">Car Loan</option>
+                                    <option value="personal">Personal Loan</option>
+                                    <option value="education">Education Loan</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <button type="submit" class="calculate-btn">
+                            <i class="fas fa-calculator"></i> Calculate EMI
+                        </button>
+                    </div>
+                </form>
+                
+                <div class="calculator-results" id="emiResults">
+                    <div class="result-grid">
+                        <div class="result-item">
+                            <div class="result-value" id="monthlyEmi">₹0</div>
+                            <div class="result-label">Monthly EMI</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-value" id="totalInterest">₹0</div>
+                            <div class="result-label">Total Interest</div>
+                        </div>
+                        <div class="result-item">
+                            <div class="result-value" id="totalPayment">₹0</div>
+                            <div class="result-label">Total Payment</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Other Financial Tools -->
+    <section class="tools-section">
+        <div class="container">
+            <div class="section-title">
+                <h2>More Financial Tools</h2>
+                <p>Explore our collection of calculators for all your financial planning needs</p>
+            </div>
+            
+            <div class="tools-grid">
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <h3>Home Loan EMI</h3>
+                    <p>Calculate monthly installments for your home purchase with detailed breakdown</p>
+                    <a href="/Emi-calc.html" class="tool-link">Calculate Now →</a>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-car"></i>
+                    </div>
+                    <h3>Car Loan EMI</h3>
+                    <p>Plan your dream car purchase with accurate EMI calculations</p>
+                    <a href="#" class="tool-link">Calculate Now →</a>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-user-graduate"></i>
+                    </div>
+                    <h3>Education Loan</h3>
+                    <p>Calculate EMIs for education loans with flexible repayment options</p>
+                    <a href="#" class="tool-link">Calculate Now →</a>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-chart-line"></i>
+                    </div>
+                    <h3>SIP Calculator</h3>
+                    <p>Estimate returns on your systematic investment plans</p>
+                    <a href="#" class="tool-link">Calculate Now →</a>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-piggy-bank"></i>
+                    </div>
+                    <h3>FD Calculator</h3>
+                    <p>Calculate maturity amount for fixed deposits with interest</p>
+                    <a href="#" class="tool-link">Calculate Now →</a>
+                </div>
+                
+                <div class="tool-card">
+                    <div class="tool-icon">
+                        <i class="fas fa-retweet"></i>
+                    </div>
+                    <h3>Loan Balance Transfer</h3>
+                    <p>Compare and calculate savings on loan transfers</p>
+                    <a href="#" class="tool-link">Calculate Now →</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <script>
+        // EMI Calculator Functionality
+        const emiForm = document.getElementById('emiCalculatorForm');
+        const emiResults = document.getElementById('emiResults');
+        
+        emiForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            // Get input values
+            const loanAmount = parseFloat(document.getElementById('loanAmount').value);
+            const interestRate = parseFloat(document.getElementById('interestRate').value);
+            const loanTenure = parseFloat(document.getElementById('loanTenure').value);
+            
+            // Calculate EMI
+            const monthlyRate = interestRate / 12 / 100;
+            const tenureMonths = loanTenure * 12;
+            const emi = loanAmount * monthlyRate * Math.pow(1 + monthlyRate, tenureMonths) / 
+                        (Math.pow(1 + monthlyRate, tenureMonths) - 1);
+            
+            const totalPayment = emi * tenureMonths;
+            const totalInterest = totalPayment - loanAmount;
+            
+            // Display results
+            document.getElementById('monthlyEmi').textContent = '₹' + emi.toFixed(0);
+            document.getElementById('totalInterest').textContent = '₹' + totalInterest.toFixed(0);
+            document.getElementById('totalPayment').textContent = '₹' + totalPayment.toFixed(0);
+            
+            // Show results
+            emiResults.style.display = 'block';
+        });
+        
+        // Tab switching functionality
+        const tabBtns = document.querySelectorAll('.tab-btn');
+        
+        tabBtns.forEach(btn => {
+            btn.addEventListener('click', function() {
+                // Remove active class from all buttons
+                tabBtns.forEach(b => b.classList.remove('active'));
+                // Add active class to clicked button
+                this.classList.add('active');
+                
+                // Here you would typically load different calculator forms
+                // For this example, we're just changing the title
+                const title = document.querySelector('.calculator-title h2');
+                const icon = document.querySelector('.calculator-icon i');
+                
+                if(this.textContent.includes('Home')) {
+                    title.textContent = 'Home Loan EMI';
+                    icon.className = 'fas fa-home';
+                } 
+                else if(this.textContent.includes('Car')) {
+                    title.textContent = 'Car Loan EMI';
+                    icon.className = 'fas fa-car';
+                }
+                else if(this.textContent.includes('Personal')) {
+                    title.textContent = 'Personal Loan EMI';
+                    icon.className = 'fas fa-credit-card';
+                }
+                else {
+                    title.textContent = 'EMI Calculator';
+                    icon.className = 'fas fa-calculator';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
